@@ -2,24 +2,6 @@
  "updatedAt": "2026/09/28 14:28",
  "lessons": [
   {
-   "teacher": "林芳竹",
-   "cls": "培力班C",
-   "date": "0115-12-12",
-   "period": "第一節",
-   "room": "培力班C",
-   "subject": "社會技巧",
-   "unit": "人際互動",
-   "lesson": "人際互動",
-   "o1": "陳志平",
-   "o2": "林慧玲",
-   "o3": "",
-   "o4": "",
-   "prepTime": "2026/12/01 第四節",
-   "prepRoom": "培力班C",
-   "debTime": "2026/12/12 第二節",
-   "debRoom": "培力班C"
-  },
-  {
    "teacher": "徐敏嘉",
    "cls": "六乙",
    "date": "2026-09-04",
@@ -1224,6 +1206,24 @@
    "prepRoom": "",
    "debTime": "",
    "debRoom": ""
+  },
+  {
+   "teacher": "林芳竹",
+   "cls": "培力班C",
+   "date": "2026-12-11",
+   "period": "第一節",
+   "room": "培力班C",
+   "subject": "社會技巧",
+   "unit": "人際互動",
+   "lesson": "人際互動",
+   "o1": "陳志平",
+   "o2": "林慧玲",
+   "o3": "",
+   "o4": "",
+   "prepTime": "2026/12/01 第四節",
+   "prepRoom": "培力班C",
+   "debTime": "2026/12/12 第二節",
+   "debRoom": "培力班C"
   },
   {
    "teacher": "陳冠璋",
