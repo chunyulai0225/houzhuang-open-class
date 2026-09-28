@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>115 學年度公開備觀議課｜苗栗縣后庄國小</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --board:#1C78C0; --board-deep:#135C96; --chalk:#FFD23F; --chalk-soft:#FFF3D6;
+  --sun-ink:#3A2E05; --orange:#F28C18;
+  --paper:#FFFDF7; --ink:#2A2721; --muted:#6E685C; --line:#EAE3D2; --line-soft:#F4EFE3;
+  --display:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --tbh:64px;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(var(--tbh) + 12px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #2F6DB5;outline-offset:2px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---------- 黑板頁首 ---------- */
+.board{background:radial-gradient(circle at 88% -10%,#FFF6C2 0,#FFE572 22%,rgba(255,229,114,0) 46%),linear-gradient(180deg,#FFDF5E 0%,#FFC93C 100%);color:var(--sun-ink);padding:36px 0 26px;position:relative;overflow:hidden}
+.board::after{content:"";position:absolute;inset:auto 0 0 0;height:8px;background:linear-gradient(90deg,#3BAA5C 0 25%,#1C78C0 25% 50%,#F28C18 50% 75%,#E5484D 75% 100%)}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.school{font-size:15px;color:#7A5F08;margin:0 0 2px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,4.6vw,48px);line-height:1.2;margin:0;letter-spacing:.02em}
+.summary{margin:10px 0 0;color:#6B5410;font-size:15px}
+.summary b{color:var(--sun-ink);font-weight:700}
+.today-stamp{font-family:var(--display);text-align:right;line-height:1.25}
+.today-stamp small{display:block;font-family:var(--sans);font-size:13px;color:#7A5F08}
+.today-stamp span{font-size:28px;color:#B34F00;font-weight:700}
+
+/* 學年時間軸 */
+.ribbon{margin:30px 0 14px;position:relative}
+.ribbon-track{position:relative;height:54px;border-bottom:2px solid rgba(58,46,5,.45)}
+.tick{position:absolute;bottom:0;width:3px;margin-left:-1.5px;background:#1C78C0;border-radius:2px 2px 0 0;transform-origin:bottom;cursor:pointer}
+.tick.past{background:rgba(58,46,5,.25)}
+.tick:hover{background:#B34F00}
+.today-line{position:absolute;top:-8px;bottom:-6px;width:2px;margin-left:-1px;background:#E5484D}
+.today-line::before{content:"今天";position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:12px;color:#C4262B;font-weight:700;white-space:nowrap}
+.months{position:relative;height:28px;margin-top:6px}
+.months button{position:absolute;top:0;background:none;border:0;padding:2px 4px;font-family:var(--display);font-size:16px;color:var(--sun-ink);cursor:pointer;border-radius:4px}
+.months button:hover{color:#B34F00}
+.months button::before{content:"";position:absolute;left:-1px;top:-8px;height:6px;width:1px;background:rgba(58,46,5,.35)}
+.tip{position:absolute;z-index:5;pointer-events:none;background:#fff;color:var(--ink);font-size:13px;line-height:1.45;padding:7px 10px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.25);white-space:nowrap;transform:translate(-50%,-100%);display:none}
+
+/* ---------- 工具列 ---------- */
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(255,253,247,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.tb{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;padding:12px 0}
+.search{flex:1 1 220px;min-width:180px;position:relative}
+.search input{width:100%;height:40px;border:1px solid var(--line);border-radius:20px;padding:0 14px 0 38px;background:#fff}
+.search svg{position:absolute;left:13px;top:11px;color:var(--muted)}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{height:34px;padding:0 12px;border:1px solid var(--line);background:#fff;border-radius:17px;cursor:pointer;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--board);border-color:var(--board);color:#fff}
+.chip:hover{border-color:var(--board)}
+select{height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;font-size:14px}
+.views{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.views button{height:36px;padding:0 14px;border:0;background:#fff;cursor:pointer;font-size:14px}
+.views button[aria-pressed="true"]{background:var(--orange);color:#fff}
+.act{height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--board);background:#fff;color:var(--board);cursor:pointer;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.act.primary{background:var(--board);color:#fff}
+.act:hover{filter:brightness(.95)}
+.head-right{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.tb-right{display:flex;gap:8px}
+.board .act{background:rgba(255,255,255,.55);border-color:rgba(58,46,5,.35);color:var(--sun-ink)}
+.board .act.primary{background:var(--board);border-color:var(--board);color:#fff}
+
+/* ---------- 今日 ---------- */
+.today{margin:32px 0 8px;background:var(--chalk-soft);border-left:6px solid var(--orange);border-radius:4px 10px 10px 4px;padding:20px 24px}
+.today h2{font-family:var(--display);font-size:24px;margin:0 0 6px;font-weight:700}
+.today .none{margin:0;color:#6B4A10}
+.today .row{border-top:1px solid rgba(242,140,24,.25)}
+.today .row:first-of-type{border-top:0}
+
+/* ---------- 區段與月份 ---------- */
+.section{margin-top:40px}
+.section>h2{font-family:var(--display);font-size:26px;font-weight:700;margin:0 0 4px;display:flex;align-items:baseline;gap:12px}
+.section>h2 small{font-family:var(--sans);font-size:14px;font-weight:400;color:var(--muted)}
+.section.done{margin-top:56px;padding-top:28px;border-top:3px double var(--line)}
+.month{display:grid;grid-template-columns:110px 1fr;gap:0 24px;padding-top:18px}
+.mlabel{position:sticky;top:calc(var(--tbh) + 14px);align-self:start;font-family:var(--display);line-height:1;padding-top:16px}
+.mlabel b{font-size:44px;font-weight:700;color:var(--board)}
+.mlabel span{font-size:18px;margin-left:2px;color:var(--board)}
+.mlabel small{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:8px}
+.done .mlabel b,.done .mlabel span{color:#B8B0A0}
+
+/* ---------- 單筆場次 ---------- */
+.row{display:grid;grid-template-columns:78px minmax(0,1fr) minmax(0,300px);gap:6px 22px;padding:18px 0;border-top:1px solid var(--line)}
+.rows .row:first-child{border-top:0}
+.when{line-height:1.25}
+.when .d{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.when .w{display:block;font-size:14px;color:var(--muted)}
+.when .p{display:inline-block;margin-top:6px;font-size:13px;padding:1px 8px;border-radius:10px;background:var(--line-soft)}
+.what .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:15px}
+.cls{font-weight:700}
+.tag{font-size:13px;padding:1px 9px;border-radius:10px;font-weight:500}
+.what h3{font-size:19px;font-weight:700;margin:4px 0 2px;line-height:1.4}
+.what h3.tbd{color:var(--muted);font-weight:500}
+.unit{font-size:14px;color:var(--muted);margin:0}
+.who{margin:8px 0 0;font-size:15px}
+.who b{font-weight:500}
+.who .room{color:var(--muted);margin-left:14px}
+.more{font-size:14px;line-height:1.55;margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-content:start}
+.more dt{color:var(--muted)}
+.more dd{margin:0}
+.more .empty{color:#A3ADA8}
+.pill-done{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:0 7px;border-radius:9px}
+.done .row{color:#6E685C}
+.done .row .tag{filter:saturate(.35)}
+.done .when .d{color:#A69E8E}
+.more-toggle{display:none}
+
+.empty-state{padding:48px 0;text-align:center;color:var(--muted)}
+.empty-state button{margin-top:10px}
+
+/* ---------- 完整總表 ---------- */
+.table-view{margin:28px 0 40px}
+.print-title{display:none}
+.table-note{font-size:14px;color:var(--muted);margin:0 0 10px}
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:1120px;font-size:14px;line-height:1.5}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+th{background:#FFF1C9;font-weight:700;white-space:nowrap;position:sticky;top:0}
+tbody tr:nth-child(even){background:#FFFCF3}
+td.nw{white-space:nowrap}
+tr.past td{color:#8A8374}
+
+footer{padding:36px 0 48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:48px}
+
+/* ---------- 手機 ---------- */
+@media (max-width:820px){
+  .wrap{padding:0 16px}
+  .month{grid-template-columns:1fr}
+  .mlabel{position:static;padding:8px 0 4px}
+  .mlabel b{font-size:34px}
+  .mlabel small{display:inline;margin-left:10px}
+  .row{grid-template-columns:62px minmax(0,1fr)}
+  .more{grid-column:2;display:none}
+  .row.open .more{display:grid}
+  .more-toggle{display:inline-block;grid-column:2;justify-self:start;background:none;border:0;padding:4px 0;color:#2F6DB5;font-size:14px;cursor:pointer}
+  .when .d{font-size:24px}
+  .head-right{align-items:stretch;width:100%}
+  .tb-right .act{flex:1;justify-content:center}
+  .toolbar{position:static}
+  .chips{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px;scrollbar-width:none}
+  .chip{flex:none}
+  .views{margin-left:auto}
+  .today-stamp{text-align:left}
+  .ribbon-track{height:44px}
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .tick{animation:chalk .5s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes chalk{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+}
+
+/* ---------- 列印 ---------- */
+@media print{
+  @page{size:A4 landscape;margin:12mm 10mm}
+  :root{padding:0}
+  body{background:#fff;font-size:10pt}
+  .board,.toolbar,.list-view,footer,.table-note{display:none!important}
+  .table-view{display:block!important;margin:0}
+  .print-title{display:block;text-align:center;margin:0 0 8px}
+  .print-title h2{font-family:var(--display);font-size:18pt;margin:0}
+  .print-title p{margin:2px 0 0;font-size:9pt;color:#444}
+  .tscroll{overflow:visible;border:0}
+  table{min-width:0;font-size:8.5pt}
+  th{position:static;min-width:0!important;background:#FFF1C9!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  th,td{padding:4px 5px;border:1px solid #999}
+  tr{break-inside:avoid}
+  tbody tr:nth-child(even){background:none}
+  tr.past td{color:#000}
+}
+</style>
+</head>
+<body>
+
+<header class="board">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="school">苗栗縣后庄國民小學</p>
+        <h1>115 學年度公開備觀議課</h1>
+        <p class="summary" id="summary"></p>
+      </div>
+      <div class="head-right">
+        <div class="today-stamp" id="todayStamp"></div>
+        <div class="tb-right">
+      <button class="act" id="btnPrint">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><path d="M6 14h12v7H6z"/></svg>列印總表</button>
+      <button class="act primary" id="btnXlsx">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>下載 Excel</button>
+    </div>
+      </div>
+    </div>
+    <div class="ribbon" id="ribbon" aria-label="學年公開課分佈，點月份可跳到該月">
+      <div class="ribbon-track" id="track"></div>
+      <div class="months" id="months"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <div class="wrap tb">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="搜尋老師、班級、科目或單元" aria-label="搜尋">
+    </label>
+    <div class="chips" id="grades" role="group" aria-label="年級"></div>
+    <select id="domain" aria-label="領域"></select>
+    <div class="views" role="group" aria-label="檢視方式">
+      <button id="vList" aria-pressed="true">依日期瀏覽</button>
+      <button id="vTable" aria-pressed="false">完整總表</button>
+    </div>
+</div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="list-view" id="listView"></div>
+  <div class="table-view" id="tableView" hidden>
+    <div class="print-title"><h2>苗栗縣后庄國民小學 115 學年度公開備觀議課一覽表</h2><p id="printDate"></p></div>
+    <p class="table-note" id="tableNote"></p>
+    <div class="tscroll"><table id="tbl"></table></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap" id="footnote">資料來源：115 學年度公開備觀議課登記表。場次如有異動，請重新填寫登記表，本頁會以最新一次填寫為準。</div>
+</footer>
+
+<script>
+/* 資料由 Google 試算表的 Apps Script 自動更新到同一個網站的 data.json */
+const DATA_URL = "data.json";
+
+/* ---------- 資料整理 ---------- */
+const CN = "一二三四五六七八九";
+const WD = "日一二三四五六";
+const PERIOD = {"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8};
+const DOMAINS = [
+  {k:"語文", c:"#2F6DB5", bg:"#E6EEF8", re:/國語|國文|閩南|台語|臺語|客家|母語|英語|閱讀/},
+  {k:"數學", c:"#6E48A8", bg:"#EFE9F7", re:/數學/},
+  {k:"自然科學", c:"#23794B", bg:"#E3F2E9", re:/自然/},
+  {k:"社會", c:"#8A5A12", bg:"#F5ECDD", re:/社會(?!技巧)/},
+  {k:"藝術", c:"#AE3B72", bg:"#F8E6EF", re:/音樂|美勞|藝術|藝文/},
+  {k:"健康與體育", c:"#B5531A", bg:"#FBEADF", re:/體育|健康|健體/},
+  {k:"生活課程", c:"#1F7F8A", bg:"#E0F1F3", re:/生活/},
+  {k:"特殊需求", c:"#5B6470", bg:"#ECEEF1", re:/特殊需求|社會技巧/},
+  {k:"其他", c:"#5B6470", bg:"#ECEEF1", re:/.*/}
+];
+const DOMAIN_ORDER = [7,6,0,1,2,3,4,5,8]; // 先判斷特殊需求、生活，再判斷其他
+
+function clean(s){return String(s||"").replace(/\s+/g," ").trim()}
+function cleanName(s){return clean(s).replace(/老師$/,"").replace(/\s/g,"")}
+function normCls(s){
+  s = clean(s).replace(/ㄧ/g,"一").replace(/\s/g,"").replace(/[1-6]/g,d=>CN[d-1]);
+  let m = s.match(/^培力班?([A-Z])班?$/i); if(m) return "培力"+m[1].toUpperCase()+"班";
+  m = s.match(/^([一二三四五六])年([甲乙丙丁戊己庚辛壬癸])班$/); if(m) return m[1]+m[2];
+  return s;
+}
+function gradeOf(c){ if(/^培力/.test(c)) return "培力班"; const g=c[0]; return CN.slice(0,6).includes(g)? g+"年級" : "其他"; }
+function domainOf(sub){ for(const i of DOMAIN_ORDER){ if(DOMAINS[i].re.test(sub)) return DOMAINS[i]; } }
+function isTbd(s){return !s || /^(待定|待訂|確認中|看當時.*)$/.test(s)}
+function parseDate(s){ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); }
+function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function roc(d){return (d.getFullYear()-1911)+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+String(d.getDate()).padStart(2,"0")}
+
+function normalize(r){
+  const date = parseDate(r.date);
+  const cls = normCls(r.cls);
+  let teacher = cleanName(r.teacher);
+  if(/^[一二三四五六1-6ㄧ]年?[甲乙丙丁戊己庚辛壬癸]班?$/.test(teacher)) teacher = "（姓名待確認）";
+  const subject = clean(r.subject);
+  const unit = clean(r.unit), lesson = clean(r.lesson);
+  let title = lesson || unit, sub = "";
+  if(isTbd(lesson) && !isTbd(unit)) { title = unit; }
+  else if(unit && unit!==lesson && !isTbd(unit)) sub = unit;
+  let room = clean(r.room); if(!room || room==="教室") room = cls+"教室";
+  const obs = [r.o1,r.o2,r.o3,r.o4].map(cleanName).filter(Boolean);
+  return {
+    date, dkey:key(date), wd:WD[date.getDay()], period:clean(r.period),
+    pn: PERIOD[(clean(r.period).match(/第(.)節/)||[])[1]] || 9,
+    cls, grade:gradeOf(cls), teacher, subject, dom:domainOf(subject),
+    unit, lesson, title, sub, tbd:isTbd(title), room, obs,
+    prepTime:clean(r.prepTime), prepRoom:clean(r.prepRoom),
+    debTime:clean(r.debTime), debRoom:clean(r.debRoom)
+  };
+}
+
+/* ---------- 狀態 ---------- */
+const params = new URLSearchParams(location.search);
+const TODAY = params.get("today") ? parseDate(params.get("today")) : new Date(new Date().setHours(0,0,0,0));
+const TKEY = key(TODAY);
+let ALL = [];
+const state = {q:"", grade:"全部", domain:"全部", view:"list"};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function load(){
+  let raw;
+  try{
+    const res = await fetch(DATA_URL + "?t=" + Date.now(), {cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    raw = await res.json();
+  }catch(e){
+    $("#listView").innerHTML = '<p class="empty-state">目前無法讀取公開課資料，請稍後重新整理頁面。</p>'; return;
+  }
+  if(!Array.isArray(raw)){
+    if(raw.updatedAt) $("#footnote").insertAdjacentHTML("beforeend", `<br>資料最後更新：${esc(raw.updatedAt)}`);
+    raw = raw.lessons || [];
+  }
+  ALL = raw.filter(r=>r.date).map(normalize).sort((a,b)=> a.date-b.date || a.pn-b.pn || a.cls.localeCompare(b.cls,"zh-Hant"));
+  initChrome(); render();
+}
+
+function initChrome(){
+  const done = ALL.filter(r=>r.dkey<TKEY).length, today = ALL.filter(r=>r.dkey===TKEY).length;
+  $("#summary").innerHTML = `本學年共 <b>${ALL.length}</b> 場公開課，已完成 <b>${done}</b> 場，還有 <b>${ALL.length-done}</b> 場。`;
+  $("#todayStamp").innerHTML = `<small>今天</small><span>${TODAY.getMonth()+1} 月 ${TODAY.getDate()} 日（${WD[TODAY.getDay()]}）</span>`;
+  $("#printDate").textContent = `產出日期：${TODAY.getFullYear()-1911} 年 ${TODAY.getMonth()+1} 月 ${TODAY.getDate()} 日`;
+
+  // 年級
+  const gOrder = ["一年級","二年級","三年級","四年級","五年級","六年級","培力班","其他"];
+  const grades = ["全部", ...gOrder.filter(g=>ALL.some(r=>r.grade===g))];
+  $("#grades").innerHTML = grades.map(g=>`<button class="chip" aria-pressed="${g==="全部"}" data-g="${g}">${g.replace("年級","年")}</button>`).join("");
+  $("#grades").onclick = e=>{ const b=e.target.closest(".chip"); if(!b) return; state.grade=b.dataset.g;
+    $("#grades").querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", x===b)); render(); };
+  // 領域
+  const doms = DOMAINS.filter(d=>ALL.some(r=>r.dom===d));
+  $("#domain").innerHTML = `<option value="全部">全部領域</option>` + doms.map(d=>`<option>${d.k}</option>`).join("");
+  $("#domain").onchange = e=>{ state.domain=e.target.value; render(); };
+  $("#q").oninput = e=>{ state.q=e.target.value.trim(); render(); };
+  $("#vList").onclick = ()=>setView("list");
+  $("#vTable").onclick = ()=>setView("table");
+  $("#btnPrint").onclick = ()=>{ setView("table"); setTimeout(()=>window.print(),50); };
+  $("#btnXlsx").onclick = downloadXlsx;
+  buildRibbon();
+  new ResizeObserver(()=>document.documentElement.style.setProperty("--tbh", $("#toolbar").offsetHeight+"px")).observe($("#toolbar"));
+}
+
+function setView(v){
+  state.view=v; $("#vList").setAttribute("aria-pressed", v==="list"); $("#vTable").setAttribute("aria-pressed", v==="table");
+  $("#listView").hidden = v!=="list"; $("#tableView").hidden = v!=="table"; render();
+}
+
+function filtered(){
+  const q = state.q.toLowerCase();
+  return ALL.filter(r=>{
+    if(state.grade!=="全部" && r.grade!==state.grade) return false;
+    if(state.domain!=="全部" && r.dom.k!==state.domain) return false;
+    if(q){ const hay=[r.teacher,r.cls,r.subject,r.unit,r.lesson,r.room,...r.obs].join(" ").toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  });
+}
+
+/* ---------- 時間軸 ---------- */
+function buildRibbon(){
+  if(!ALL.length) return;
+  const first = new Date(ALL[0].date.getFullYear(), ALL[0].date.getMonth(), 1);
+  const lastD = ALL[ALL.length-1].date;
+  const end = new Date(lastD.getFullYear(), lastD.getMonth()+1, 1);
+  const span = end-first, pct = d => ((d-first)/span*100);
+  const byDay = {};
+  ALL.forEach(r=>(byDay[r.dkey] ||= []).push(r));
+  let i=0;
+  $("#track").innerHTML = Object.entries(byDay).map(([k,rs])=>{
+    const d=parseDate(k), h=Math.min(12+rs.length*9, 52);
+    return `<div class="tick ${k<TKEY?"past":""}" data-k="${k}" style="left:${pct(d)+ (0.5/ (span/864e5))*100}%;height:${h}px;animation-delay:${(i++)*12}ms"></div>`;
+  }).join("") + (TODAY>=first && TODAY<end ? `<div class="today-line" style="left:${pct(TODAY)}%"></div>` : "");
+  let ms="", m=new Date(first);
+  while(m<end){ const k=key(m).slice(0,7); ms += `<button data-m="${k}" style="left:${pct(m)}%">${m.getMonth()+1}月</button>`; m=new Date(m.getFullYear(), m.getMonth()+1, 1); }
+  $("#months").innerHTML = ms;
+  $("#months").onclick = e=>{ const b=e.target.closest("button"); if(!b) return; jumpTo(b.dataset.m); };
+  const tip=$("#tip");
+  $("#track").addEventListener("mouseover", e=>{ const t=e.target.closest(".tick"); if(!t){tip.style.display="none";return;}
+    const rs=byDay[t.dataset.k], d=parseDate(t.dataset.k);
+    tip.innerHTML = `<b>${d.getMonth()+1}/${d.getDate()}（${rs[0].wd}）</b><br>`+rs.map(r=>`${esc(r.cls)} ${esc(r.teacher)}｜${esc(r.subject)}`).join("<br>");
+    tip.style.left=t.style.left; tip.style.top=(t.offsetTop-6)+"px"; tip.style.display="block"; });
+  $("#track").addEventListener("mouseleave", ()=>tip.style.display="none");
+  $("#track").addEventListener("click", e=>{ const t=e.target.closest(".tick"); if(t) jumpTo(t.dataset.k.slice(0,7)); });
+}
+function jumpTo(mk){
+  if(state.view!=="list") setView("list");
+  const el = document.getElementById("m-"+mk);
+  if(el) el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+}
+
+/* ---------- 一覽 ---------- */
+function rowHTML(r, isDone){
+  const tag = `<span class="tag" style="color:${r.dom.c};background:${r.dom.bg}">${esc(r.subject)}</span>`;
+  const obs = r.obs.length ? esc(r.obs.join("、")) : '<span class="empty">未填</span>';
+  const pair = (t,p)=> t||p ? esc([t,p].filter(Boolean).join("｜")) : '<span class="empty">未填</span>';
+  return `<article class="row">
+    <div class="when"><span class="d">${r.date.getMonth()+1}/${r.date.getDate()}</span><span class="w">星期${r.wd}</span><span class="p">${esc(r.period)}</span></div>
+    <div class="what">
+      <div class="top"><span class="cls">${esc(r.cls)}</span>${tag}${isDone?'<span class="pill-done">已完成</span>':""}</div>
+      <h3 class="${r.tbd?"tbd":""}">${r.tbd?"教學單元待定":esc(r.title)}</h3>
+      ${r.sub?`<p class="unit">${esc(r.sub)}</p>`:""}
+      <p class="who">授課　<b>${esc(r.teacher)}</b><span class="room">${esc(r.room)}</span></p>
+    </div>
+    <button class="more-toggle" aria-expanded="false">觀課與議課資訊</button>
+    <dl class="more">
+      <dt>觀課</dt><dd>${obs}</dd>
+      <dt>共備</dt><dd>${pair(r.prepTime,r.prepRoom)}</dd>
+      <dt>議課</dt><dd>${pair(r.debTime,r.debRoom)}</dd>
+    </dl>
+  </article>`;
+}
+function monthsHTML(list, isDone, seen){
+  const groups = [];
+  list.forEach(r=>{ const mk=r.dkey.slice(0,7); let g=groups[groups.length-1]; if(!g||g.mk!==mk){ g={mk,rows:[]}; groups.push(g);} g.rows.push(r); });
+  return groups.map(g=>{
+    const [y,m]=g.mk.split("-").map(Number);
+    const id = seen.has(g.mk) ? "" : `id="m-${g.mk}"`; seen.add(g.mk);
+    return `<div class="month" ${id}>
+      <div class="mlabel"><b>${m}</b><span>月</span><small>${y-1911} 年．${g.rows.length} 場</small></div>
+      <div class="rows">${g.rows.map(r=>rowHTML(r,isDone)).join("")}</div></div>`;
+  }).join("");
+}
+function render(){
+  const list = filtered();
+  if(state.view==="table") return renderTable(list);
+  const today = list.filter(r=>r.dkey===TKEY), up = list.filter(r=>r.dkey>TKEY), done = list.filter(r=>r.dkey<TKEY);
+  const filteredOn = state.q || state.grade!=="全部" || state.domain!=="全部";
+  if(!list.length){
+    $("#listView").innerHTML = `<div class="empty-state"><p>沒有符合條件的場次。</p><button class="act" id="clr">清除篩選</button></div>`;
+    $("#clr").onclick = clearFilters; return;
+  }
+  let h = "";
+  if(today.length){
+    h += `<section class="today"><h2>今天的公開課</h2>${today.map(r=>rowHTML(r,false)).join("")}</section>`;
+  } else if(!filteredOn){
+    const nx = up[0];
+    h += `<section class="today"><h2>今天沒有公開課</h2><p class="none">${nx?`下一場是 ${nx.date.getMonth()+1}/${nx.date.getDate()}（${nx.wd}）${esc(nx.period)}，${esc(nx.cls)} ${esc(nx.teacher)}老師的${esc(nx.subject)}。`:"本學年的公開課都已完成。"}</p></section>`;
+  }
+  const seen = new Set();
+  if(up.length) h += `<section class="section"><h2>即將進行<small>${up.length} 場</small></h2>${monthsHTML(up,false,seen)}</section>`;
+  if(done.length) h += `<section class="section done"><h2>已完成<small>${done.length} 場</small></h2>${monthsHTML(done,true,seen)}</section>`;
+  $("#listView").innerHTML = h;
+  $("#listView").querySelectorAll(".more-toggle").forEach(b=>b.onclick=()=>{ const row=b.closest(".row"); const o=row.classList.toggle("open"); b.setAttribute("aria-expanded",o); b.textContent=o?"收合":"觀課與議課資訊"; });
+}
+function clearFilters(){
+  state.q=""; state.grade="全部"; state.domain="全部"; $("#q").value=""; $("#domain").value="全部";
+  $("#grades").querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", x.dataset.g==="全部")); render();
+}
+
+/* ---------- 總表與匯出 ---------- */
+const COLS = ["日期","星期","節次","班級","授課教師","科目（領域）","教學單元","課名","公開課地點","觀課教師","共備時間","共備地點","議課時間","議課地點"];
+function toRow(r){ return [roc(r.date), r.wd, r.period, r.cls, r.teacher, r.subject, r.unit, r.lesson, r.room, r.obs.join("、"), r.prepTime, r.prepRoom, r.debTime, r.debRoom]; }
+const TCOLS = [["日期",""],["星期",""],["節次",""],["班級",""],["授課教師",""],["科目",7],["教學單元",8],["課名",10],["地點",7],["觀課教師",7],["共備時間／地點",9],["議課時間／地點",9]];
+const pairT = (a,b)=>[a,b].filter(Boolean).join("／");
+function toTRow(r){ return [roc(r.date), r.wd, r.period, r.cls, r.teacher, r.subject, r.unit, r.lesson, r.room, r.obs.join("、"), pairT(r.prepTime,r.prepRoom), pairT(r.debTime,r.debRoom)]; }
+function renderTable(list){
+  const filteredOn = list.length!==ALL.length;
+  $("#tableNote").textContent = filteredOn ? `目前篩選後顯示 ${list.length} 場（全部共 ${ALL.length} 場）。列印與畫面相同；「下載 Excel」一律包含全部場次。` : `共 ${ALL.length} 場，依日期排序。`;
+  $("#tbl").innerHTML = `<thead><tr><th>#</th>${TCOLS.map(([c,w])=>`<th${w?` style="min-width:${w}em"`:""}>${c}</th>`).join("")}</tr></thead><tbody>` +
+    list.map((r,i)=>`<tr class="${r.dkey<TKEY?"past":""}"><td class="nw">${i+1}</td>${toTRow(r).map((v,j)=>`<td class="${j<5?"nw":""}">${esc(v)}</td>`).join("")}</tr>`).join("") + "</tbody>";
+}
+function downloadXlsx(){
+  if(!window.XLSX){ alert("Excel 元件尚未載入，請確認網路連線後再試一次。"); return; }
+  const aoa = [COLS, ...ALL.map(toRow)];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = [10,5,7,9,9,14,18,22,14,22,18,12,18,12].map(w=>({wch:w*1.6}));
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "公開備觀議課");
+  XLSX.writeFile(wb, `后庄國小115學年度公開備觀議課一覽表_${key(TODAY).replace(/-/g,"")}.xlsx`);
+}
+
+load();
+</script>
+</body>
+</html>
