@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026/09/29 08:12",
+ "updatedAt": "2026/09/29 08:56",
  "lessons": [
   {
    "teacher": "徐敏嘉",
@@ -1208,6 +1208,24 @@
    "debRoom": "培力班C"
   },
   {
+   "teacher": "饒瑋婷",
+   "cls": "五乙",
+   "date": "2026-12-18",
+   "period": "第二節",
+   "room": "五乙教室",
+   "subject": "英語",
+   "unit": "Review 1",
+   "lesson": "Review 1",
+   "o1": "葉敏",
+   "o2": "姚玉鳳",
+   "o3": "",
+   "o4": "",
+   "prepTime": "",
+   "prepRoom": "",
+   "debTime": "",
+   "debRoom": ""
+  },
+  {
    "teacher": "陳冠璋",
    "cls": "三辛",
    "date": "2026-12-18",
@@ -1278,24 +1296,6 @@
    "prepRoom": "大辦公室",
    "debTime": "10/23",
    "debRoom": "大辦公室"
-  },
-  {
-   "teacher": "饒瑋婷",
-   "cls": "五年乙班",
-   "date": "2026-12-25",
-   "period": "第二節",
-   "room": "五年乙班教室",
-   "subject": "英語",
-   "unit": "Culture & Festivals",
-   "lesson": "Chinese New Year",
-   "o1": "姚玉鳳",
-   "o2": "葉敏",
-   "o3": "",
-   "o4": "",
-   "prepTime": "",
-   "prepRoom": "",
-   "debTime": "",
-   "debRoom": ""
   },
   {
    "teacher": "蔡沄瑾",
